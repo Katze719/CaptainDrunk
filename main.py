@@ -196,4 +196,5 @@ async def spin(ctx):
     await ctx.reply(choice, file=file)
     log(ctx, f"spin={choice}")
 
-bot.run("OTg2MzQ1MzA2OTg1NzI2MDY0.G6wpi_.eHItZe_XAZth_nDYpQnraQfgn-aMdijPWm6qfk")
+with open('TOKEN.txt','r') as file:
+    bot.run(file.readline())
