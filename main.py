@@ -142,7 +142,7 @@ async def message(ctx):
     !message
     """
     response = 'get yo ass in here, my favourite drunken boys and girls:\n' + get_users(ctx, True)
-    await ctx.send(response)
+    await ctx.reply(response)
 
 @bot.command(aliases=['DRINK', 'Drink'])
 async def drink(ctx):
@@ -153,7 +153,7 @@ async def drink(ctx):
     !drink
     """
     response = 'TAKE A SHOT!!!:\n' + get_users(ctx, True)
-    await ctx.send(response)
+    await ctx.reply(response)
 
 @bot.command(aliases=['SHOT', 'Shot'])
 async def shot(ctx):
@@ -168,7 +168,7 @@ async def shot(ctx):
         choice = random.choice(json_data['names'])
         for user, mention in choice.items():
             response = 'YOU HAVE BEEN CHOSEN TO TAKE A SHOT!!!:\n' + f"- {mention}"
-    await ctx.send(response)
+    await ctx.reply(response)
 
 @bot.command(aliases=['remove-me', 'delete-me'])
 async def remove_me(ctx):
@@ -196,5 +196,9 @@ async def spin(ctx):
     await ctx.reply(choice, file=file)
     log(ctx, f"spin={choice}")
 
-with open('TOKEN.txt','r') as file:
+@bot.command()
+async def info(ctx):
+    await ctx.reply("https://github.com/Katze719/CaptainDrunk")
+
+with open('.env', 'r') as file:
     bot.run(file.readline())
