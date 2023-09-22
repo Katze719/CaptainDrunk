@@ -3,8 +3,8 @@ import json
 import os
 import random
 import logging
-import img_gen
-from drinking_sentences import sentence_data
+from . import img_gen
+from .drinking_sentences import sentence_data
 from discord.ext import commands
 
 logger = logging.getLogger('discord')
