@@ -3,8 +3,8 @@ import json
 import os
 import random
 import logging
-from . import img_gen
-from .drinking_sentences import sentence_data
+# from . import img_gen
+from drinking_sentences import sentence_data
 from discord.ext import commands
 
 logger = logging.getLogger('discord')
@@ -191,8 +191,8 @@ async def spin(ctx):
     !spin
     """
     sentences, probabilities = zip(*sentence_data)
-    img_gen.get_img(len(sentences))
-    file = discord.File("spin.png")
+    # img_gen.get_img(len(sentences))
+    # file = discord.File("spin.png")
     choice = random.choice(random.choices(sentences, probabilities))
     await ctx.reply(choice)
     log(ctx, f"spin={choice}")
