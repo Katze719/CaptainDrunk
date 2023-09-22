@@ -81,6 +81,7 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 @bot.event
 async def on_ready():
     logger.info("Bot is Online")
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="getting DRUNK!!!"))
 
 @bot.command(aliases=['time'])
 async def ping(ctx):
@@ -193,7 +194,7 @@ async def spin(ctx):
     img_gen.get_img(len(sentences))
     file = discord.File("spin.png")
     choice = random.choice(random.choices(sentences, probabilities))
-    await ctx.reply(choice, file=file)
+    await ctx.reply(choice)
     log(ctx, f"spin={choice}")
 
 @bot.command()
