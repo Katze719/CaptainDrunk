@@ -201,5 +201,4 @@ async def spin(ctx):
 async def info(ctx):
     await ctx.reply("https://github.com/Katze719/CaptainDrunk")
 
-with open('.env', 'r') as file:
-    bot.run(file.readline())
+bot.run(str(os.getenv('Token')))
