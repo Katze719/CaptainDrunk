@@ -5,6 +5,7 @@ RUN set -eux; \
 
 COPY ./main.py /app/
 COPY ./img_gen /app/
+COPY ./helpers.py /app/
 COPY ./drinking_sentences.py /app/
 COPY ./requirements.txt /app/
 
