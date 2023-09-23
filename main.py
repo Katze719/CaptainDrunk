@@ -77,7 +77,7 @@ def delete_user(ctx, user_name):
         json.dump(json_data, f, indent=4)
     log(ctx, "removed from the list")
 
-bot = commands.Bot(command_prefix="%", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
@@ -199,4 +199,4 @@ async def spin(ctx):
 async def info(ctx):
     await ctx.reply("https://github.com/Katze719/CaptainDrunk")
 
-bot.run(str(os.getenv('DevToken')))
+bot.run(str(os.getenv('Token')))
