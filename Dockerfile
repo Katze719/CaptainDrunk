@@ -1,7 +1,5 @@
 FROM ubuntu:latest
 
-ENV Token=""
-
 RUN set -eux; \
     mkdir /app;
 
@@ -9,10 +7,6 @@ COPY ./main.py /app/
 COPY ./img_gen /app/
 COPY ./drinking_sentences.py /app/
 COPY ./requirements.txt /app/
-
-RUN set -eux; \
-    touch .env; \
-    echo ${Token} | tee ./.env
 
 RUN set -eux; \
     apt-get update; \
