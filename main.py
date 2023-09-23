@@ -5,6 +5,7 @@ import random
 import logging
 # from . import img_gen
 from drinking_sentences import sentence_data
+from helpers import EMBED_COLOR, simple_embed
 from discord.ext import commands
 
 logger = logging.getLogger('discord')
@@ -101,7 +102,7 @@ async def addme(ctx):
     Usage:
     !addme
     """
-    await ctx.reply(f"{ctx.author.mention} added!")
+    await ctx.reply(embed=simple_embed("Added!", ctx.author.mention))
     add_user(ctx, {ctx.author.name : ctx.author.mention})
 
 @bot.command()
@@ -114,7 +115,7 @@ async def clear_list(ctx):
 
     clears the list of users for the server
     """
-    await ctx.reply("cleared the list!")
+    await ctx.reply(embed=simple_embed("cleared the list!", ''))
     clear_users(ctx)
 
 @bot.command(aliases=['list', 'list_users', 'list-users'])
@@ -131,8 +132,7 @@ async def users(ctx, raw=''):
             await ctx.reply(json.load(f)['names'])
             return
 
-    response = 'People ready to DRINK:\n' + get_users(ctx)
-    await ctx.reply(response)
+    await ctx.reply(embed=simple_embed('People ready to DRINK', get_users(ctx)))
 
 @bot.command(aliases=['mention', 'drunk'])
 async def message(ctx):
@@ -142,8 +142,7 @@ async def message(ctx):
     Usage:
     !message
     """
-    response = 'get yo ass in here, my favourite drunken boys and girls:\n' + get_users(ctx, True)
-    await ctx.reply(response)
+    await ctx.reply(embed=simple_embed('get yo ass in here, my favourite drunken boys and girls !!!', get_users(ctx, True)))
 
 @bot.command(aliases=['DRINK', 'Drink'])
 async def drink(ctx):
@@ -153,8 +152,7 @@ async def drink(ctx):
     Usage:
     !drink
     """
-    response = 'TAKE A SHOT!!!:\n' + get_users(ctx, True)
-    await ctx.reply(response)
+    await ctx.reply(embed=simple_embed('TIME TO TAKE A SHOT!!!', get_users(ctx, True)))
 
 @bot.command(aliases=['SHOT', 'Shot'])
 async def shot(ctx):
@@ -168,8 +166,8 @@ async def shot(ctx):
         json_data = json.load(f)
         choice = random.choice(json_data['names'])
         for user, mention in choice.items():
-            response = 'YOU HAVE BEEN CHOSEN TO TAKE A SHOT!!!:\n' + f"- {mention}"
-    await ctx.reply(response)
+            response = 'YOU HAVE BEEN CHOSEN TO TAKE A SHOT!!!'
+    await ctx.reply(embed=simple_embed(response, mention))
 
 @bot.command(aliases=['remove-me', 'delete-me'])
 async def remove_me(ctx):
@@ -179,7 +177,7 @@ async def remove_me(ctx):
     Usage:
     !remove_me
     """
-    await ctx.reply("removed you from the list!")
+    await ctx.reply(embed=simple_embed("removed you from the list!"))
     delete_user(ctx, ctx.author.name)
 
 @bot.command(aliases=['slots', 'wheel'])
@@ -194,7 +192,7 @@ async def spin(ctx):
     # img_gen.get_img(len(sentences))
     # file = discord.File("spin.png")
     choice = random.choice(random.choices(sentences, probabilities))
-    await ctx.reply(choice)
+    await ctx.reply(embed=simple_embed('Your Task:', choice))
     log(ctx, f"spin={choice}")
 
 @bot.command()
