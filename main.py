@@ -7,11 +7,12 @@ import logging
 from drinking_sentences import sentence_data
 from helpers import EMBED_COLOR, simple_embed
 from discord.ext import commands
+from discord import app_commands
 
 logger = logging.getLogger('discord')
 
 def log(ctx, msg):
-    logger.info(f"{ctx.author.name} from {ctx.guild.name} {msg}")
+    logger.info(f"{ctx.user.name} from {ctx.guild.name} {msg}")
 
 
 def add_user(ctx, user_name):
@@ -83,8 +84,14 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 async def on_ready():
     logger.info("Bot is Online")
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="getting DRUNK!!!"))
+    try:
+        synced = await bot.tree.sync()
+        logger.info(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        logger.exception(e)
 
-@bot.command(aliases=['time'])
+
+@bot.tree.command(name="ping")
 async def ping(ctx):
     """
     Pings the bot and send a response with the time needed in ms
@@ -92,9 +99,9 @@ async def ping(ctx):
     Usage:
     !ping
     """
-    await ctx.reply(f"Pong! {round(bot.latency * 1000)}ms")
+    await ctx.response.send_message(embed=simple_embed(f"Pong! {round(bot.latency * 1000)}ms"))
 
-@bot.command(aliases=['add_me', 'addMe', 'AddMe', 'Addme', 'join'])
+@bot.tree.command(name="addme")
 async def addme(ctx):
     """
     Adds the user to the list, and makes him ready to Drink a few shots :)
@@ -102,10 +109,10 @@ async def addme(ctx):
     Usage:
     !addme
     """
-    await ctx.reply(embed=simple_embed("Added!", ctx.author.mention))
-    add_user(ctx, {ctx.author.name : ctx.author.mention})
+    await ctx.response.send_message(embed=simple_embed("Added!", ctx.user.mention))
+    add_user(ctx, {ctx.user.name : ctx.user.mention})
 
-@bot.command()
+@bot.tree.command(name="clear_list")
 async def clear_list(ctx):
     """
     DO NOT USE THIS, use `!remove_me` instead
@@ -115,11 +122,11 @@ async def clear_list(ctx):
 
     clears the list of users for the server
     """
-    await ctx.reply(embed=simple_embed("cleared the list!", ''))
+    await ctx.response.send_message(embed=simple_embed("cleared the list!", ''))
     clear_users(ctx)
 
-@bot.command(aliases=['list', 'list_users', 'list-users'])
-async def users(ctx, raw=''):
+@bot.tree.command(name="users")
+async def users(ctx, raw: str =''):
     """
     returns a list of users ready to drink (with the real discord names)
 
@@ -129,12 +136,12 @@ async def users(ctx, raw=''):
     """
     if raw == 'raw':
         with open(f"{ctx.guild.name}_users.json", 'r') as f:
-            await ctx.reply(json.load(f)['names'])
+            await ctx.response.send_message(json.load(f)['names'])
             return
 
-    await ctx.reply(embed=simple_embed('People ready to DRINK', get_users(ctx)))
+    await ctx.response.send_message(embed=simple_embed('People ready to DRINK', get_users(ctx)))
 
-@bot.command(aliases=['mention', 'drunk'])
+@bot.tree.command(name="message")
 async def message(ctx):
     """
     mentions every user in the list ready to drink
@@ -142,9 +149,9 @@ async def message(ctx):
     Usage:
     !message
     """
-    await ctx.reply(embed=simple_embed('get yo ass in here, my favourite drunken boys and girls !!!', get_users(ctx, True)))
+    await ctx.response.send_message(embed=simple_embed('get yo ass in here, my favourite drunken boys and girls !!!', get_users(ctx, True)))
 
-@bot.command(aliases=['DRINK', 'Drink'])
+@bot.tree.command(name="drink")
 async def drink(ctx):
     """
     mentions every user in the list and prompts them to take a shot
@@ -152,9 +159,9 @@ async def drink(ctx):
     Usage:
     !drink
     """
-    await ctx.reply(embed=simple_embed('TIME TO TAKE A SHOT!!!', get_users(ctx, True)))
+    await ctx.response.send_message(embed=simple_embed('TIME TO TAKE A SHOT!!!', get_users(ctx, True)))
 
-@bot.command(aliases=['SHOT', 'Shot'])
+@bot.tree.command(name="shot")
 async def shot(ctx):
     """
     picks a random user in the list and prompts him to take a shot
@@ -167,9 +174,9 @@ async def shot(ctx):
         choice = random.choice(json_data['names'])
         for user, mention in choice.items():
             response = 'YOU HAVE BEEN CHOSEN TO TAKE A SHOT!!!'
-    await ctx.reply(embed=simple_embed(response, mention))
+    await ctx.response.send_message(embed=simple_embed(response, mention))
 
-@bot.command(aliases=['remove-me', 'delete-me'])
+@bot.tree.command(name="remove_me")
 async def remove_me(ctx):
     """
     removes you from the list (pussy)
@@ -177,10 +184,10 @@ async def remove_me(ctx):
     Usage:
     !remove_me
     """
-    await ctx.reply(embed=simple_embed("removed you from the list!"))
-    delete_user(ctx, ctx.author.name)
+    await ctx.response.send_message(embed=simple_embed("removed you from the list!"))
+    delete_user(ctx, ctx.user.name)
 
-@bot.command(aliases=['slots', 'wheel'])
+@bot.tree.command(name="spin")
 async def spin(ctx):
     """
     returns a random choice from wheel
@@ -192,11 +199,11 @@ async def spin(ctx):
     # img_gen.get_img(len(sentences))
     # file = discord.File("spin.png")
     choice = random.choice(random.choices(sentences, probabilities))
-    await ctx.reply(embed=simple_embed('Your Task:', choice))
+    await ctx.response.send_message(embed=simple_embed('Your Task:', choice))
     log(ctx, f"spin={choice}")
 
-@bot.command()
+@bot.tree.command(name="info")
 async def info(ctx):
-    await ctx.reply("https://github.com/Katze719/CaptainDrunk")
+    await ctx.response.send_message("https://github.com/Katze719/CaptainDrunk")
 
 bot.run(str(os.getenv('Token')))
