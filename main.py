@@ -72,7 +72,7 @@ async def shot(ctx):
     if users.check_user(ctx.guild.id, ctx.user.mention) == True:
         await ctx.response.send_message(embed=simple_embed('Take a Shot!', random.choice(users.users[ctx.guild.id])))
         return
-    await ctx.response.send_message(embed=simple_embed('Take a Shot for not beeing in the list!', ctx.user.mention))
+    await ctx.response.send_message(embed=simple_embed('Take a Shot for not being in the list!', ctx.user.mention))
 
 @bot.tree.command(name="info")
 async def info(ctx):
