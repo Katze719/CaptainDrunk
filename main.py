@@ -52,20 +52,27 @@ async def addme(ctx):
     await ctx.response.send_message(embed=simple_embed('Info', users.add_user(ctx.guild.id, ctx.user.mention)))
 
 @bot.tree.command(name="adduser")
-async def adduser(ctx, user_name: str):
-    await ctx.response.send_message(embed=simple_embed('Info', users.add_user(ctx.guild.id, user_name)))
+async def adduser(ctx, user_name: discord.Member):
+    await ctx.response.send_message(embed=simple_embed('Info', users.add_user(ctx.guild.id, user_name.mention)))
 
 @bot.tree.command(name="removeme")
 async def removeme(ctx):
     await ctx.response.send_message(embed=simple_embed('Info', users.remove_user(ctx.guild.id, ctx.user.mention)))
 
 @bot.tree.command(name="removeuser")
-async def removeme(ctx, user_name: str):
-    await ctx.response.send_message(embed=simple_embed('Info', users.remove_user(ctx.guild.id, user_name)))
+async def removeme(ctx, user_name: discord.Member):
+    await ctx.response.send_message(embed=simple_embed('Info', users.remove_user(ctx.guild.id, user_name.mention)))
 
 @bot.tree.command(name="list")
 async def list(ctx):
     await ctx.response.send_message(embed=simple_embed('Users', users.get_users(ctx.guild.id)))
+
+@bot.tree.command(name="shot")
+async def shot(ctx):
+    if users.check_user(ctx.guild.id, ctx.user.mention) == True:
+        await ctx.response.send_message(embed=simple_embed('Take a Shot!', random.choice(users.users[ctx.guild.id])))
+        return
+    await ctx.response.send_message(embed=simple_embed('Take a Shot for not beeing in the list!', ctx.user.mention))
 
 @bot.tree.command(name="info")
 async def info(ctx):

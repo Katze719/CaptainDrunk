@@ -17,11 +17,14 @@ def add_user(guild_id, user_name) -> str:
 def remove_user(guild_id, user_name) -> str:
     if check_user(guild_id, user_name) == False:
         return 'You are not in the list!'
-    del users[guild_id][user_name]
+    for i in range(len(users[guild_id])):
+        if user_name == users[guild_id][i]:
+            del users[guild_id][i]
+            break
     return f'Deleted {user_name} from list!'
 
 def get_users(guild_id) -> str:
-    if guild_id not in users:
+    if guild_id not in users or len(users[guild_id]) == 0:
         return 'List is empty!'
     result = ''
     for user in users[guild_id]:
