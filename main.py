@@ -49,12 +49,23 @@ async def ping(ctx):
 
 @bot.tree.command(name="addme")
 async def addme(ctx):
-    await ctx.response.send_message(embed=simple_embed('Info', users.add_user(ctx.guild.id, ctx.user.name)))
+    await ctx.response.send_message(embed=simple_embed('Info', users.add_user(ctx.guild.id, ctx.user.mention)))
+
+@bot.tree.command(name="adduser")
+async def adduser(ctx, user_name: str):
+    await ctx.response.send_message(embed=simple_embed('Info', users.add_user(ctx.guild.id, user_name)))
+
+@bot.tree.command(name="removeme")
+async def removeme(ctx):
+    await ctx.response.send_message(embed=simple_embed('Info', users.remove_user(ctx.guild.id, ctx.user.mention)))
+
+@bot.tree.command(name="removeuser")
+async def removeme(ctx, user_name: str):
+    await ctx.response.send_message(embed=simple_embed('Info', users.remove_user(ctx.guild.id, user_name)))
 
 @bot.tree.command(name="list")
 async def list(ctx):
     await ctx.response.send_message(embed=simple_embed('Users', users.get_users(ctx.guild.id)))
-
 
 @bot.tree.command(name="info")
 async def info(ctx):

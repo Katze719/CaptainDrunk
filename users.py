@@ -26,4 +26,4 @@ def get_users(guild_id) -> str:
     result = ''
     for user in users[guild_id]:
         result += f'- {user}\n'
-    return f'```\n{result}\n```'
+    return result
